@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const Phonebook = require('./phonebook');
 
 const app = express();
 
 app.use(express.json());
+
 
 morgan.token('body', (req) => {
   return JSON.stringify(req.body);
@@ -52,9 +55,10 @@ app.get('/api/persons/4', (request, response) => {
 });
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons);
-});
-
+  Phonebook.find({}).then(phonebook => {
+    response.json(phonebook)
+  })
+})
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter(person => person.id !== id);
