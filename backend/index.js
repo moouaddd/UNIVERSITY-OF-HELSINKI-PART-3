@@ -87,17 +87,22 @@ app.post('/api/persons', (req, res) => {
 app.put('/api/persons/:id', (req, res) => {
   const body = req.body;
 
+  const isValidNumber = /\d{2,3}-\d{5,6}/.test(body.number);
+  if (!isValidNumber) {
+    return res.status(400).json({ error: 'Invalid phone number' });
+  }
+
   const person = {
     name: body.name,
     number: body.number
   };
-  
+
   Phonebook.findByIdAndUpdate(req.params.id, person, { new: true })
     .then(updatedPerson => {
       res.json(updatedPerson);
     })
     .catch(error => {
-      res.status(400).send({ error: 'malformatted id' });
+      res.status(400).json({ error: error.message });
     });
 });
 
