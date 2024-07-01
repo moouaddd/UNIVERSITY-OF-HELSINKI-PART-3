@@ -62,6 +62,7 @@ app.post('/api/persons', (req, res) => {
   if (body.name === undefined || body.number === undefined) {
     return res.status(400).json({ error: 'Name or number missing' })
   }
+  
 
   Phonebook.findOne({ name: body.name })
     .then(existingPerson => {
