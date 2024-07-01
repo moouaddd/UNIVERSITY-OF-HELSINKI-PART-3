@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const url = process.env.MONGODB_URL;
 
@@ -13,9 +13,15 @@ mongoose.connect(url)
   })
 
 const phoneSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-})
+  name: { type: String, minLength:3, required: true, unique: true},
+  number: { type: String, minLength:8, 
+    validate: {
+      validator: function(v) {
+        return /\d{2,3}-\d{5,6}/.test(v);
+    },
+    setErrorMessage: props => `${props.value} is not a valid phone number!`
+  },
+required: true }})
 
 phoneSchema.set('toJSON', {
   transform: (document, returnedObject) => {
